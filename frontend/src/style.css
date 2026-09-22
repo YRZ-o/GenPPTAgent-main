@@ -1,0 +1,9 @@
+/* 目录: ./frontend/src/style.css | 模块: 全局样式 | 职责: 引入 Tailwind 基础指令 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+}

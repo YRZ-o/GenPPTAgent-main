@@ -1,0 +1,10 @@
+# 目录: ./backend/.dockerignore | 模块: Docker 构建 | 职责: 排除不需要打入镜像的文件，减小镜像体积
+__pycache__
+*.pyc
+*.pyo
+.env
+output/
+uploads/
+.git
+.gitignore
+*.md

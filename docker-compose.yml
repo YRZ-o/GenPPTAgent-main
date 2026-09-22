@@ -1,0 +1,57 @@
+# 目录: ./docker-compose.yml | 模块: 容器编排 | 职责: 编排 backend 和 frontend 两个服务，配置网络、卷挂载和环境变量
+services:
+  # ==================== 后端服务 ====================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ppt-agent-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+    volumes:
+      # 持久化生成的 PPT 和上传的素材
+      - ppt_output:/app/output
+      - ppt_uploads:/app/uploads
+      # 挂载模板目录（方便修改母版后无需重新构建镜像）
+      - ./backend/templates:/app/templates
+    networks:
+      - ppt-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== 前端服务 ====================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:8000}
+    container_name: ppt-agent-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - ppt-network
+    restart: unless-stopped
+
+# ==================== 共享卷 ====================
+volumes:
+  ppt_output:
+    driver: local
+  ppt_uploads:
+    driver: local
+
+# ==================== 网络 ====================
+networks:
+  ppt-network:
+    driver: bridge

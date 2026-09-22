@@ -1,0 +1,6 @@
+# 目录: ./frontend/.dockerignore | 模块: Docker 构建 | 职责: 排除 node_modules 和构建产物，避免打入镜像
+node_modules
+dist
+.git
+.gitignore
+*.md
