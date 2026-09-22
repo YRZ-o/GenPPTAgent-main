@@ -82,7 +82,7 @@ flowchart LR
 ### 1️⃣ 获取项目
 
 ```bash
-git clone https://github.com/<your-name>/GenPPTAgent.git
+git clone https://github.com/YRZ-o/GenPPTAgent-main.git
 cd GenPPTAgent
 ```
 
